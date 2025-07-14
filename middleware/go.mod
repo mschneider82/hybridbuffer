@@ -1,0 +1,5 @@
+module schneider.vip/hybridbuffer/middleware
+
+go 1.23.0
+
+toolchain go1.24.0
