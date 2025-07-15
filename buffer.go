@@ -528,10 +528,10 @@ func (b *hybridBuffer) openWriteStream() error {
 		return errors.Wrap(err, "failed to create storage write stream")
 	}
 
-	// Apply middleware pipeline in reverse order (last middleware first)
+	// Apply middleware pipeline in forward order (first middleware first)
 	writer := io.Writer(writeStream)
-	for i := len(b.middlewares) - 1; i >= 0; i-- {
-		writer = b.middlewares[i].Writer(writer)
+	for _, middleware := range b.middlewares {
+		writer = middleware.Writer(writer)
 	}
 
 	// Convert back to WriteCloser
@@ -558,10 +558,10 @@ func (b *hybridBuffer) openReadStream() error {
 		return errors.Wrap(err, "failed to open storage read stream")
 	}
 
-	// Apply middleware pipeline in forward order (first middleware first)
+	// Apply middleware pipeline in reverse order (last middleware first)
 	reader := io.Reader(readStream)
-	for _, middleware := range b.middlewares {
-		reader = middleware.Reader(reader)
+	for i := len(b.middlewares) - 1; i >= 0; i-- {
+		reader = b.middlewares[i].Reader(reader)
 	}
 
 	// Convert back to ReadCloser

@@ -20,13 +20,13 @@ func WithThreshold(size int) Option {
 
 // WithMiddleware adds one or more middlewares to the processing pipeline
 // Middlewares are applied in the order they are added:
-// - For writing: applied in reverse order (last middleware first)
-// - For reading: applied in forward order (first middleware first)
+// - For writing: applied in forward order (first middleware first)
+// - For reading: applied in reverse order (last middleware first)
 //
 // Example usage:
 //
-//	WithMiddleware(encryption.New(key))
 //	WithMiddleware(compression.New(), encryption.New(key))
+//	WithMiddleware(encryption.New(key))
 func WithMiddleware(middlewares ...middleware.Middleware) Option {
 	return func(b *hybridBuffer) {
 		b.middlewares = append(b.middlewares, middlewares...)

@@ -4,6 +4,8 @@
 
 A modular and efficient Go package for hybrid memory/disk buffering with pluggable middleware and storage backends. When memory usage exceeds a configurable threshold, data is automatically moved to storage, allowing you to handle large data streams without consuming excessive memory.
 
+Inspired by Java's [`DeferredFileOutputStream`](https://commons.apache.org/proper/commons-io/javadocs/api-2.11.0/org/apache/commons/io/output/DeferredFileOutputStream.html), this library provides a similar concept for Go with modern features like middleware support and pluggable storage backends.
+
 ## 🚀 Features
 
 ### Smart Memory Management
@@ -145,20 +147,20 @@ buf3 := hybridbuffer.New(
 │         hybridBuffer                │  <- Core logic with middleware pipeline
 ├─────────────────────────────────────┤
 │         Middleware                  │  <- Pluggable: encryption, compression, etc.
-│    ┌─────────────────────────────┐   │
-│    │  encryption  │  compression │   │
-│    └─────────────────────────────┘   │
+│    ┌─────────────────────────────┐  │
+│    │  encryption  │  compression │  │
+│    └─────────────────────────────┘  │
 ├─────────────────────────────────────┤
 │       Storage Backend               │  <- Pluggable: filesystem, S3, Redis, etc.
-│    ┌─────────────────────────────┐   │
-│    │ filesystem │ s3 │  redis   │   │
-│    └─────────────────────────────┘   │
+│    ┌─────────────────────────────┐  │
+│    │ filesystem │ s3 │  redis    │  │
+│    └─────────────────────────────┘  │
 └─────────────────────────────────────┘
 ```
 
 ### Middleware Pipeline
-- **Writing**: Applied in reverse order (last middleware first)
-- **Reading**: Applied in forward order (first middleware first)
+- **Writing**: Applied in forward order (first middleware first)
+- **Reading**: Applied in reverse order (last middleware first)
 - **Example**: `Data → Compression → Encryption → Storage` (writing)
 - **Example**: `Storage → Encryption → Compression → Data` (reading)
 
@@ -541,8 +543,8 @@ buf := hybridbuffer.New(
    - Avoid with large buffers - use streaming operations instead
 
 2. **Middleware pipeline order**:
-   - Writing: reverse order (compression → encryption → storage)
-   - Reading: forward order (storage → encryption → compression)
+   - Writing: forward order (compression → encryption → storage)
+   - Reading: reverse order (storage → encryption → compression)
 
 3. **Storage backend requirements**:
    - Must implement Create(), Open(), Remove()
