@@ -4,7 +4,7 @@ go 1.24.2
 
 require (
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.83.0
-	schneider.vip/hybridbuffer v1.0.8
+	schneider.vip/hybridbuffer v1.0.8-0.20250715114204-ba75af515d59
 	schneider.vip/hybridbuffer/storage/s3 v1.0.7
 )
 
@@ -22,5 +22,5 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	schneider.vip/hybridbuffer/middleware v1.0.6 // indirect
 	schneider.vip/hybridbuffer/storage v1.0.6 // indirect
-	schneider.vip/hybridbuffer/storage/filesystem v1.0.7 // indirect
+	schneider.vip/hybridbuffer/storage/filesystem v1.0.8 // indirect
 )
