@@ -4,7 +4,7 @@
 
 A modular and efficient Go package for hybrid memory/disk buffering with pluggable middleware and storage backends. When memory usage exceeds a configurable threshold, data is automatically moved to storage, allowing you to handle large data streams without consuming excessive memory.
 
-Inspired by Java's [`DeferredFileOutputStream`](https://commons.apache.org/proper/commons-io/javadocs/api-2.11.0/org/apache/commons/io/output/DeferredFileOutputStream.html), this library provides a similar concept for Go with modern features like middleware support and pluggable storage backends.
+Inspired by Java's [`DeferredFileOutputStream`](https://commons.apache.org/proper/commons-io/javadocs/api-2.4/org/apache/commons/io/output/DeferredFileOutputStream.html), this library provides a similar concept for Go with modern features like middleware support and pluggable storage backends.
 
 ## 🚀 Features
 
