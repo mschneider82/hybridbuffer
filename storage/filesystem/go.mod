@@ -8,3 +8,5 @@ require (
 	github.com/pkg/errors v0.9.1
 	schneider.vip/hybridbuffer/storage v1.0.2
 )
+
+replace schneider.vip/hybridbuffer/storage => ../
