@@ -2,10 +2,10 @@ package hybridbuffer
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"unicode/utf8"
 
-	"github.com/pkg/errors"
 	"schneider.vip/hybridbuffer/middleware"
 	"schneider.vip/hybridbuffer/storage"
 	"schneider.vip/hybridbuffer/storage/filesystem"
@@ -107,7 +107,7 @@ func (b *hybridBuffer) Write(data []byte) (n int, err error) {
 	// Check if we need to switch to storage
 	if !b.usingStorage && b.memoryBuffer.Len()+len(data) > b.threshold {
 		if err = b.flushToStorage(); err != nil {
-			return 0, errors.Wrap(err, "failed to flush to storage")
+			return 0, fmt.Errorf("failed to flush to storage: %w", err)
 		}
 	}
 
@@ -115,7 +115,7 @@ func (b *hybridBuffer) Write(data []byte) (n int, err error) {
 		// Write to storage
 		if b.writeStream == nil {
 			if err = b.openWriteStream(); err != nil {
-				return 0, errors.Wrap(err, "failed to open write stream")
+				return 0, fmt.Errorf("failed to open write stream: %w", err)
 			}
 		}
 		n, err = b.writeStream.Write(data)
@@ -153,7 +153,7 @@ func (b *hybridBuffer) Read(data []byte) (n int, err error) {
 		// Read from storage
 		if b.readStream == nil {
 			if err = b.openReadStream(); err != nil {
-				return 0, errors.Wrap(err, "failed to open read stream")
+				return 0, fmt.Errorf("failed to open read stream: %w", err)
 			}
 		}
 		n, err = b.readStream.Read(data[:bytesToRead])
@@ -508,7 +508,7 @@ func (b *hybridBuffer) flushToStorage() error {
 	memData := b.memoryBuffer.Bytes()
 	if len(memData) > 0 {
 		if _, err := b.writeStream.Write(memData); err != nil {
-			return errors.Wrap(err, "failed to write memory data to storage")
+			return fmt.Errorf("failed to write memory data to storage: %w", err)
 		}
 	}
 
@@ -525,7 +525,7 @@ func (b *hybridBuffer) openWriteStream() error {
 
 	writeStream, err := b.storageBackend.Create()
 	if err != nil {
-		return errors.Wrap(err, "failed to create storage write stream")
+		return fmt.Errorf("failed to create storage write stream: %w", err)
 	}
 
 	// Apply middleware pipeline in forward order (first middleware first)
@@ -555,7 +555,7 @@ func (b *hybridBuffer) openReadStream() error {
 
 	readStream, err := b.storageBackend.Open()
 	if err != nil {
-		return errors.Wrap(err, "failed to open storage read stream")
+		return fmt.Errorf("failed to open storage read stream: %w", err)
 	}
 
 	// Apply middleware pipeline in reverse order (last middleware first)
